@@ -1,7 +1,7 @@
 const isim = "Mehmet";
 console.log(isim);
 
-const yas = "24";
+const yas = 24;
 console.log(yas);
 
 const ogrenciMi = true;
