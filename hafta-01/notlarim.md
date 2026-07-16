@@ -1,0 +1,1 @@
+git config dosyaları özelleştirmek ve kişiselleştirmek için kullanıyoruz. git init olmayan repository oluşturmak için kullanıyoruz. git add dosyayı eklemek için kullanıyoruz. git commit demek yaptığımız dosyayı değiştirdiğimiz sırada ortaya çıkıyor ve ne olduğunu belirterek geçmişte gösteriyoruz. bunu da git push ile public yolluyoruz.
