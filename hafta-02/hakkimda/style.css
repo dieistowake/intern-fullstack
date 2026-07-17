@@ -87,3 +87,36 @@ form button {
 form button:hover {
   background-color: #1a252f;
 }
+.kart-izgara {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.kart {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.kart h3 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  section {
+    padding: 0 12px;
+  }
+
+  .kart-izgara {
+    grid-template-columns: 1fr;
+  }
+}
