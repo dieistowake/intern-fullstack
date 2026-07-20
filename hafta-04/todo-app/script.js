@@ -1,8 +1,26 @@
-let gorevler = [];
-let sonrakiId = 1;
+const KAYIT_ANAHTARI = "todo-gorevler-kayit";
+
+const gorevleriKaydet = () => {
+  localStorage.setItem(KAYIT_ANAHTARI, JSON.stringify(gorevler));
+};
+
+const gorevleriYukle = () => {
+  const kayitliVeri = localStorage.getItem(KAYIT_ANAHTARI);
+  if (kayitliVeri === null) {
+    return [];
+  }
+  return JSON.parse(kayitliVeri);
+};
+
+let gorevler = gorevleriYukle();
+
+let sonrakiId =
+  gorevler.length > 0 ? Math.max(...gorevler.map((g) => g.id)) + 1 : 1;
 
 const listeElement = document.querySelector("#gorev-listesi");
 const bosMesajElement = document.querySelector("#bos-mesaj");
+const formElement = document.querySelector("#gorev-form");
+const inputElement = document.querySelector("#gorev-input");
 
 const listeyiEkranaCiz = () => {
   listeElement.innerHTML = "";
@@ -38,19 +56,32 @@ const listeyiEkranaCiz = () => {
     li.appendChild(silButon);
     listeElement.appendChild(li);
   });
-}; // <-- Eksik olan kapanış süslü parantezi eklendi
-
-listeyiEkranaCiz();
+};
 
 const gorevEkle = (metin) => {
   const yeniGorev = { id: sonrakiId, metin: metin, tamamlandi: false };
   gorevler.push(yeniGorev);
   sonrakiId = sonrakiId + 1;
+
+  gorevleriKaydet();
   listeyiEkranaCiz();
 };
 
-const formElement = document.querySelector("#gorev-form");
-const inputElement = document.querySelector("#gorev-input");
+const gorevTamamlaToggle = (id) => {
+  gorevler = gorevler.map((gorev) =>
+    gorev.id === id ? { ...gorev, tamamlandi: !gorev.tamamlandi } : gorev
+  );
+
+  gorevleriKaydet();
+  listeyiEkranaCiz();
+};
+
+const gorevSil = (id) => {
+  gorevler = gorevler.filter((gorev) => gorev.id !== id);
+
+  gorevleriKaydet();
+  listeyiEkranaCiz();
+};
 
 formElement.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -62,18 +93,6 @@ formElement.addEventListener("submit", (event) => {
   inputElement.value = "";
 });
 
-const gorevTamamlaToggle = (id) => {
-  gorevler = gorevler.map((gorev) =>
-    gorev.id === id ? { ...gorev, tamamlandi: !gorev.tamamlandi } : gorev
-  );
-  listeyiEkranaCiz();
-};
-
-const gorevSil = (id) => {
-  gorevler = gorevler.filter((gorev) => gorev.id !== id);
-  listeyiEkranaCiz();
-};
-
 listeElement.addEventListener("click", (event) => {
   const tiklananId = Number(event.target.dataset.id);
 
@@ -84,3 +103,5 @@ listeElement.addEventListener("click", (event) => {
     gorevSil(tiklananId);
   }
 });
+
+listeyiEkranaCiz();
