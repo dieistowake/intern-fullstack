@@ -1,5 +1,4 @@
 const alintiElement = document.querySelector("#alinti");
-const yazarElement = document.querySelector("#yazar");
 const buton = document.querySelector("#getir-buton");
 const durumElement = document.querySelector("#durum");
 
@@ -8,7 +7,7 @@ const alintiGetir = async () => {
   durumElement.textContent = "Yükleniyor...";
 
   try {
-    const cevap = await fetch("https://api.quotable.io/random");
+    const cevap = await fetch("https://dog.ceo/api/breeds/image/random");
 
     if (!cevap.ok) {
       throw new Error(`İstek başarısız: ${cevap.status}`);
@@ -16,11 +15,10 @@ const alintiGetir = async () => {
 
     const veri = await cevap.json();
 
-    alintiElement.textContent = veri.content;
-    yazarElement.textContent = `— ${veri.author}`;
+    alintiElement.src = veri.message;
     durumElement.textContent = "";
   } catch (hata) {
-    durumElement.textContent = "Alıntı getirilemedi, tekrar dene.";
+    durumElement.textContent = "Fotoğraf getirilemedi, tekrar dene.";
     console.log("Hata detayı:", hata);
   } finally {
     buton.disabled = false;
