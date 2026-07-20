@@ -1,64 +1,33 @@
 const KAYIT_ANAHTARI = "todo-gorevler-kayit";
 
-const gorevleriKaydet = () => {
-  localStorage.setItem(KAYIT_ANAHTARI, JSON.stringify(gorevler));
-};
-
 const gorevleriYukle = () => {
   const kayitliVeri = localStorage.getItem(KAYIT_ANAHTARI);
-  if (kayitliVeri === null) {
-    return [];
-  }
-  return JSON.parse(kayitliVeri);
+  return kayitliVeri === null ? [] : JSON.parse(kayitliVeri);
 };
 
 let gorevler = gorevleriYukle();
-
 let sonrakiId =
   gorevler.length > 0 ? Math.max(...gorevler.map((g) => g.id)) + 1 : 1;
 
-const listeElement = document.querySelector("#gorev-listesi");
+  const listeElement = document.querySelector("#gorev-listesi");
 const bosMesajElement = document.querySelector("#bos-mesaj");
 const formElement = document.querySelector("#gorev-form");
 const inputElement = document.querySelector("#gorev-input");
 
-const listeyiEkranaCiz = () => {
-  listeElement.innerHTML = "";
-
-  if (gorevler.length === 0) {
-    bosMesajElement.style.display = "block";
-    return;
-  }
-
-  bosMesajElement.style.display = "none";
-
-  gorevler.forEach((gorev) => {
-    const li = document.createElement("li");
-
-    const metinSpan = document.createElement("span");
-    metinSpan.textContent = gorev.metin;
-    if (gorev.tamamlandi) {
-      metinSpan.classList.add("tamamlandi");
-    }
-
-    const tamamlaButon = document.createElement("button");
-    tamamlaButon.textContent = "✓";
-    tamamlaButon.classList.add("mini-buton", "tamamla-buton");
-    tamamlaButon.dataset.id = gorev.id;
-
-    const silButon = document.createElement("button");
-    silButon.textContent = "✕";
-    silButon.classList.add("mini-buton", "sil-buton");
-    silButon.dataset.id = gorev.id;
-
-    li.appendChild(metinSpan);
-    li.appendChild(tamamlaButon);
-    li.appendChild(silButon);
-    listeElement.appendChild(li);
-  });
+const gorevleriKaydet = () => {
+  localStorage.setItem(KAYIT_ANAHTARI, JSON.stringify(gorevler));
 };
 
 const gorevEkle = (metin) => {
+  const zatenVarMi = gorevler.some(
+    (gorev) => gorev.metin.toLowerCase() === metin.toLowerCase()
+  );
+
+  if (zatenVarMi) {
+    alert("Bu görev zaten listenizde mevcut!");
+    return;
+  }
+
   const yeniGorev = { id: sonrakiId, metin: metin, tamamlandi: false };
   gorevler.push(yeniGorev);
   sonrakiId = sonrakiId + 1;
@@ -81,6 +50,48 @@ const gorevSil = (id) => {
 
   gorevleriKaydet();
   listeyiEkranaCiz();
+};
+
+const gorevSatiriOlustur = (gorev) => {
+  const li = document.createElement("li");
+
+  const metinSpan = document.createElement("span");
+  metinSpan.textContent = gorev.metin;
+  if (gorev.tamamlandi) {
+    metinSpan.classList.add("tamamlandi");
+  }
+
+  const tamamlaButon = document.createElement("button");
+  tamamlaButon.textContent = "✓";
+  tamamlaButon.classList.add("mini-buton", "tamamla-buton");
+  tamamlaButon.dataset.id = gorev.id;
+
+  const silButon = document.createElement("button");
+  silButon.textContent = "✕";
+  silButon.classList.add("mini-buton", "sil-buton");
+  silButon.dataset.id = gorev.id;
+
+  li.appendChild(metinSpan);
+  li.appendChild(tamamlaButon);
+  li.appendChild(silButon);
+
+  return li;
+};
+
+const listeyiEkranaCiz = () => {
+  listeElement.innerHTML = "";
+
+  if (gorevler.length === 0) {
+    bosMesajElement.style.display = "block";
+    return;
+  }
+
+  bosMesajElement.style.display = "none";
+
+  gorevler.forEach((gorev) => {
+    const li = gorevSatiriOlustur(gorev);
+    listeElement.appendChild(li);
+  });
 };
 
 formElement.addEventListener("submit", (event) => {
