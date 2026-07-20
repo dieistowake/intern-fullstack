@@ -72,7 +72,33 @@ h1 {
   border-bottom: 1px solid #eee;
 }
 
-#gorev-listesi li.tamamlandi {
+.tamamlandi {
   text-decoration: line-through;
   color: #aaa;
+}
+
+#gorev-listesi li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mini-buton {
+  border: none;
+  background: #eee;
+  border-radius: 4px;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  margin-left: 6px;
+  font-size: 13px;
+}
+
+.tamamla-buton:hover {
+  background: #55efc4;
+}
+
+.sil-buton:hover {
+  background: #ff7675;
+  color: white;
 }
