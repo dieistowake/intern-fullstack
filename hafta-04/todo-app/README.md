@@ -30,4 +30,4 @@ Uygulamayı çalıştırmak için herhangi bir paket yöneticisine (npm, yarn vb
 3.  Uygulama kullanıma hazırdır!
 
 ## Canlı Önizleme
-*(Proje Vercel vb. bir platforma yüklendiğinde canlı link buraya eklenecektir.)*
+*(https://intern-todo-app.vercel.app/)*
