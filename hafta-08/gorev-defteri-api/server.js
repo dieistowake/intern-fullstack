@@ -48,18 +48,49 @@ app.get("/gorevler", (req, res) => {
   res.json(sonuc);
 });
 
-// POST /gorevler → yeni görev ekle
 app.post("/gorevler", (req, res) => {
-  const { baslik } = req.body; // client'ın gönderdiği { "baslik": "..." } objesinden okuyoruz
+  const { baslik } = req.body;
+
+  if (!baslik || baslik.trim() === "") {
+    return res.status(400).json({ hata: "baslik alanı zorunlu" });
+  }
 
   const yeniGorev = {
-    id: gorevler.length + 1,       // basit id üretimi (Hafta 9'da veritabanı bunu otomatik yapacak)
-    baslik: baslik,
+    id: gorevler.length + 1,
+    baslik,
     tamamlandi: false,
   };
-
   gorevler.push(yeniGorev);
-  res.json(yeniGorev);
+  res.status(201).json(yeniGorev);
+});
+
+// PUT /gorevler/:id → var olan görevi güncelle
+app.put("/gorevler/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const gorev = gorevler.find((g) => g.id === id);
+
+  if (!gorev) {
+    return res.status(404).json({ hata: "Görev bulunamadı" });
+  }
+
+  // req.body'de gelen alanları var olan görevin üstüne yaz
+  gorev.baslik = req.body.baslik ?? gorev.baslik;
+  gorev.tamamlandi = req.body.tamamlandi ?? gorev.tamamlandi;
+
+  res.status(200).json(gorev);
+});
+
+// DELETE /gorevler/:id → görevi sil
+app.delete("/gorevler/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const index = gorevler.findIndex((g) => g.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ hata: "Görev bulunamadı" });
+  }
+
+  gorevler.splice(index, 1); // diziden çıkar
+  res.status(200).json({ mesaj: "Görev silindi" });
 });
 
 // Sunucuyu başlat ve belirtilen portu dinlemeye başla
