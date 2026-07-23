@@ -9,6 +9,16 @@ let gorevler = [
 
 const app = express();               // Bir Express uygulaması oluştur
 const PORT = 3000;                   // Sunucunun dinleyeceği kapı numarası
+app.use(express.json());
+
+// Kendi middleware'in — her istekte otomatik çalışır
+function istekLogla(req, res, next) {
+  const zaman = new Date().toLocaleTimeString();
+  console.log(`[${zaman}] ${req.method} ${req.url}`);
+  next(); // ÖNEMLİ: next() çağrılmazsa istek burada takılı kalır, route'a hiç ulaşmaz!
+}
+
+app.use(istekLogla); // her route'tan önce çalışsın
 
 // GET / isteği geldiğinde çalışacak fonksiyon
 app.get("/", (req, res) => {
@@ -36,6 +46,20 @@ app.get("/gorevler", (req, res) => {
     );
   }
   res.json(sonuc);
+});
+
+// POST /gorevler → yeni görev ekle
+app.post("/gorevler", (req, res) => {
+  const { baslik } = req.body; // client'ın gönderdiği { "baslik": "..." } objesinden okuyoruz
+
+  const yeniGorev = {
+    id: gorevler.length + 1,       // basit id üretimi (Hafta 9'da veritabanı bunu otomatik yapacak)
+    baslik: baslik,
+    tamamlandi: false,
+  };
+
+  gorevler.push(yeniGorev);
+  res.json(yeniGorev);
 });
 
 // Sunucuyu başlat ve belirtilen portu dinlemeye başla
