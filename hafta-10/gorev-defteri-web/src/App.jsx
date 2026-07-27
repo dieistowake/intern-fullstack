@@ -34,16 +34,21 @@ function App() {
   const [sifre, setSifre] = useState('')
   const [token, setToken] = useState(localStorage.getItem('token'))
   const [gorevler, setGorevler] = useState([])
+  const [yukleniyor, setYukleniyor] = useState(false)
+  const [hataMesaji, setHataMesaji] = useState('')
 
   useEffect(() => {
     if (!token) return
 
     const yukleGorevler = async () => {
+      setYukleniyor(true)
       try {
         const liste = await gorevleriGetir()
         setGorevler(liste)
       } catch (hata) {
         console.error('Görevler çekilirken hata oluştu:', hata)
+      } finally {
+        setYukleniyor(false)
       }
     }
 
@@ -52,6 +57,7 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setHataMesaji('')
 
     try {
       const veri = await girisYap(email, sifre)
@@ -61,6 +67,7 @@ function App() {
       }
     } catch (hata) {
       console.error('Giriş hatası:', hata)
+      setHataMesaji('Giriş başarısız — email veya şifreni kontrol et.')
     }
   }
 
@@ -98,20 +105,25 @@ function App() {
 
             <button type="submit">Giriş Yap</button>
           </form>
+          {hataMesaji && <p className="hata-mesaji" style={{ color: 'red' }}>{hataMesaji}</p>}
         </div>
       ) : (
         <div className="gorevler-container">
           <h2>Görevlerim</h2>
           <GorevEkleForm onEklendi={handleYeniGorev} />
-          <ul>
-            {gorevler.map((gorev) => (
-              <li key={gorev.id}>
-                <span style={{ textDecoration: gorev.tamamlandi ? 'line-through' : 'none' }}>
-                  {gorev.baslik}
-                </span>
-              </li>
-            ))}
-          </ul>
+          {yukleniyor ? (
+            <p>Yükleniyor...</p>
+          ) : (
+            <ul>
+              {gorevler.map((gorev) => (
+                <li key={gorev.id}>
+                  <span style={{ textDecoration: gorev.tamamlandi ? 'line-through' : 'none' }}>
+                    {gorev.baslik}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </div>
