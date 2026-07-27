@@ -11,7 +11,7 @@ export async function girisYap(email, sifre) {
     throw new Error("Giriş başarısız");
   }
   return cevap.json();
-  
+}
   export async function gorevleriGetir() {
   const token = localStorage.getItem("token");
 
@@ -24,4 +24,16 @@ export async function girisYap(email, sifre) {
   if (!cevap.ok) throw new Error("Görevler alınamadı");
   return cevap.json();
 }
+export async function gorevEkle(baslik) {
+  const token = localStorage.getItem("token");
+  const cevap = await fetch(`${API_URL}/gorevler`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ baslik }),
+  });
+  if (!cevap.ok) throw new Error("Görev eklenemedi");
+  return cevap.json();
 }
