@@ -8,7 +8,8 @@ import {
 } from "recharts";
 import { useGecmisOlcumler } from "../hooks/useGecmisOlcumler";
 
-const API_URL = "https://gorev-defteri-api-production.up.railway.app";
+// Sabit URL yerine Vercel/yerel ortam değişkeni kullanılıyor
+const API_URL = import.meta.env.VITE_API_URL;
 
 export function TemperatureChart() {
   const veri = useGecmisOlcumler(API_URL);
