@@ -1,4 +1,5 @@
 import { useCanliOlcum } from "../hooks/useCanliOlcum";
+import { StatusBadge } from "./StatusBadge";
 
 // Wokwi kartı doğrudan Railway'e POST attığı için canlı wss:// adresini dinliyoruz
 const WS_URL = "wss://gorev-defteri-api-production.up.railway.app";
@@ -18,6 +19,12 @@ export function StatusCard() {
         <span style={styles.statusText}>
           {bagli ? "Canlı Bağlantı" : "Bağlanıyor..."}
         </span>
+        {sonOlcum && (
+          <StatusBadge
+            temperature={sonOlcum.temperature}
+            humidity={sonOlcum.humidity}
+          />
+        )}
       </div>
 
       {sonOlcum ? (
@@ -48,6 +55,7 @@ const styles = {
     alignItems: "center",
     gap: "8px",
     marginBottom: "12px",
+    flexWrap: "wrap" as const,
   },
   dot: {
     width: "10px",
@@ -58,6 +66,7 @@ const styles = {
   statusText: {
     fontSize: "14px",
     fontWeight: "bold",
+    marginRight: "auto",
   },
   content: {
     display: "flex",
