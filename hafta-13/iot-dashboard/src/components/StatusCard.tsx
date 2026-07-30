@@ -1,8 +1,8 @@
 import { useCanliOlcum } from "../hooks/useCanliOlcum";
 import { StatusBadge } from "./StatusBadge";
 
-// Wokwi kartı doğrudan Railway'e POST attığı için canlı wss:// adresini dinliyoruz
-const WS_URL = "wss://gorev-defteri-api-production.up.railway.app";
+// Sabit URL yerine Vercel/yerel ortam değişkeni kullanılıyor
+const WS_URL = import.meta.env.VITE_WS_URL;
 
 export function StatusCard() {
   const { sonOlcum, bagli } = useCanliOlcum(WS_URL);
