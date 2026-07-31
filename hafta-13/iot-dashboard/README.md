@@ -87,3 +87,13 @@ npm run dev
 ```
 
 Tarayıcıda `http://localhost:5173` adresini aç — kart (fiziksel veya Wokwi simülasyonu) veri gönderdikçe pano canlı güncellenecektir.
+
+---
+
+## Öğrendiklerim
+
+- **WebSocket Yaşam Döngüsü ve Temizleme (Cleanup):** React tarafında `useEffect` cleanup fonksiyonu kullanılmadığında, bileşen her yeniden yüklendiğinde eski TCP bağlantılarının açık kaldığını ve sunucu tarafında "hayalet" (zombi) soket birikmesine yol açtığını deneyimledim. Bağlantıyı `socket.close()` ile doğru zamanda sonlandırmanın bellek sızıntılarını önlemedeki kritik rolünü kavradım.
+- **Mikrodenetleyicilerde Soket / Ağ Sızıntıları:** ESP32 (MicroPython) üzerinde `urequests.post()` isteklerinden sonra `yanit.close()` çağrısı yapılmadığında donanım seviyesinde HTTP soketlerinin açık kaldığını ve bir süre sonra kartın `OSError: [Errno 12] ENOMEM` vererek kilitlendiğini tespit edip çözdüm.
+- **Farklı Mimariler İçin Kimlik Doğrulama Ayrımı:** İnsan kullanıcılar için oturum süreli JWT (JSON Web Token) kullanılırken, kısıtlı kaynaklara sahip IoT cihazları için `X-API-Key` tabanlı static header doğrulamasının neden daha uygun ve hafif bir mimari çözüm olduğunu uygulayarak öğrendim.
+
+---
